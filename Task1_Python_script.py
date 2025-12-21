@@ -1,26 +1,24 @@
 import os
 import requests
 import re
-from bs4 import BeautifulSoup  # Code here - Import BeautifulSoup library
+from bs4 import BeautifulSoup  
 
-# function to get the html source text of the medium article
+
 def get_page():
 	global url
 	
-	url = input("Enter url of a medium article: ")  # Code here - Ask the user to input "Enter url of a medium article: " and collect it in url
+	url = input("Enter url of a medium article: ")  
 	
-	# handling possible error
 	if not re.match(r'https?://medium.com/',url):
 		print('Please enter a valid website, or make sure it is a medium article')
 		sys.exit(1)
 
-	res = requests.get(url)  # Code here - Call get method in requests object, pass url and collect it in res
+	res = requests.get(url)  
 
 	res.raise_for_status()
 	soup = BeautifulSoup(res.text, 'html.parser')
 	return soup
 
-# function to remove all the html tags and replace some with specific strings
 def clean(text):
     rep = {"<br>": "\n", "<br/>": "\n", "<li>":  "\n"}
     rep = dict((re.escape(k), v) for k, v in rep.items()) 
@@ -38,7 +36,7 @@ def collect_text(soup):
 		text += f"{para.text}\n\n"
 	return text
 
-# function to save file in the current directory
+
 def save_file(text):
 	if not os.path.exists('./scraped_articles'):
 		os.mkdir('./scraped_articles')
@@ -46,7 +44,7 @@ def save_file(text):
 	print(name)
 	fname = f'scraped_articles/{name}.txt'
 	
-	with open(fname, 'w', encoding='utf-8') as f:  # Code here - write a file using with (2 lines)
+	with open(fname, 'w', encoding='utf-8') as f:  
 		f.write(text)
 
 	print(f'File saved in directory {fname}')
@@ -55,5 +53,4 @@ def save_file(text):
 if __name__ == '__main__':
 	text = collect_text(get_page())
 	save_file(text)
-	# Instructions to Run this python code
-	# Give url as https://medium.com/@subashgandyer/papa-what-is-a-neural-network-c5e5cc427c7
+	
